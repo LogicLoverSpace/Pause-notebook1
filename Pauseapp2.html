@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pause - Your Digital Sanctuary</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2d3748;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .app-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .app-subtitle {
+            font-size: 1.3rem;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .author-credit {
+            font-size: 1rem;
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .main-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .nav-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .nav-card.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .nav-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .nav-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .nav-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .content-area {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Journal Section */
+        .journal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .journal-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .entry-form {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .mood-selector {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .mood-option {
+            padding: 10px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .mood-option:hover, .mood-option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .entries-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .entry-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .entry-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .entry-date {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .entry-mood {
+            font-size: 1.5rem;
+        }
+
+        .entry-content {
+            line-height: 1.6;
+            color: #4b5563;
+        }
+
+        .entry-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-small {
+            padding: 5px 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Mood Tracker */
+        .mood-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+
+        .calendar-day:hover {
+            transform: scale(1.05);
+        }
+
+        .calendar-day.has-mood {
+            border-color: #667eea;
+        }
+
+        /* Goals Section */
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .goal-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .goal-progress {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .goal-progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        /* Habits Tracker */
+        .habits-grid {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .habit-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .habit-days {
+            display: flex;
+            gap: 8px;
+        }
+
+        .habit-day {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .habit-day.completed {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        /* Gratitude Section */
+        .gratitude-form {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .gratitude-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .gratitude-item {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border-left: 4px solid #f59e0b;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        /* Quotes Section */
+        .quote-display {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            border-radius: 20px;
+            margin-bottom: 25px;
+        }
+
+        .quote-text {
+            font-size: 1.5rem;
+            font-style: italic;
+            color: #3730a3;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .quote-author {
+            font-weight: 600;
+            color: #6366f1;
+        }
+
+        /* Analytics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-title {
+                font-size: 2.5rem;
+            }
+            
+            .main-nav {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .journal-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .mood-selector {
+                justify-content: center;
+            }
+            
+            .calendar-day {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Dark mode toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Export/Import styles */
+        .export-section {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #0ea5e9;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-label:hover {
+            background: #0284c7;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    
+    <div class="app-container">
+        <div class="app-header">
+            <h1 class="app-title">Pause ✨</h1>
+            <p class="app-subtitle">Your Digital Sanctuary for Mindful Living</p>
+            <p class="author-credit">by Maryam Mehboob Baloch</p>
+        </div>
+
+        <div class="main-nav">
+            <div class="nav-card active" onclick="showSection('journal')">
+                <span class="nav-icon">📝</span>
+                <div class="nav-title">Journal</div>
+                <div class="nav-desc">Capture your thoughts & feelings</div>
+            </div>
+            <div class="nav-card" onclick="showSection('mood')">
+                <span class="nav-icon">😊</span>
+                <div class="nav-title">Mood Tracker</div>
+                <div class="nav-desc">Track your emotional journey</div>
+            </div>
+            <div class="nav-card" onclick="showSection('goals')">
+                <span class="nav-icon">🎯</span>
+                <div class="nav-title">Goals</div>
+                <div class="nav-desc">Set & achieve your dreams</div>
+            </div>
+            <div class="nav-card" onclick="showSection('habits')">
+                <span class="nav-icon">⚡</span>
+                <div class="nav-title">Habits</div>
+                <div class="nav-desc">Build positive routines</div>
+            </div>
+            <div class="nav-card" onclick="showSection('gratitude')">
+                <span class="nav-icon">🙏</span>
+                <div class="nav-title">Gratitude</div>
+                <div class="nav-desc">Appreciate life's blessings</div>
+            </div>
+            <div class="nav-card" onclick="showSection('quotes')">
+                <span class="nav-icon">💫</span>
+                <div class="nav-title">Inspiration</div>
+                <div class="nav-desc">Daily quotes & affirmations</div>
+            </div>
+            <div class="nav-card" onclick="showSection('analytics')">
+                <span class="nav-icon">📊</span>
+                <div class="nav-title">Analytics</div>
+                <div class="nav-desc">Insights about your journey</div>
+            </div>
+            <div class="nav-card" onclick="showSection('settings')">
+                <span class="nav-icon">⚙️</span>
+                <div class="nav-title">Settings</div>
+                <div class="nav-desc">Customize your experience</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Journal Section -->
+            <div id="journal" class="section active">
+                <div class="journal-header">
+                    <h2>📝 My Journal</h2>
+                    <div class="journal-controls">
+                        <button class="btn btn-primary" onclick="showEntryForm()">✍️ New Entry</button>
+                        <button class="btn btn-secondary" onclick="exportEntries()">📤 Export</button>
+                        <button class="btn btn-secondary" onclick="searchEntries()">🔍 Search</button>
+                    </div>
+                </div>
+
+                <div id="entryForm" class="entry-form" style="display: none;">
+                    <h3>New Journal Entry</h3>
+                    <div class="form-group">
+                        <label class="form-label">How are you feeling today?</label>
+                        <div class="mood-selector">
+                            <div class="mood-option" data-mood="😢">😢 Sad</div>
+                            <div class="mood-option" data-mood="😐">😐 Neutral</div>
+                            <div class="mood-option" data-mood="😊">😊 Happy</div>
+                            <div class="mood-option" data-mood="😍">😍 Amazing</div>
+                            <div class="mood-option" data-mood="🤔">🤔 Thoughtful</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Title (optional)</label>
+                        <input type="text" class="form-input" id="entryTitle" placeholder="Give your entry a title...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">What's on your mind?</label>
+                        <textarea class="form-textarea" id="entryContent" placeholder="Pour your heart out..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" onclick="saveEntry()">💾 Save Entry</button>
+                        <button class="btn btn-secondary" onclick="cancelEntry()">❌ Cancel</button>
+                    </div>
+                </div>
+
+                <div id="entriesList" class="entries-grid">
+                    <!-- Entries will be populated here -->
+                </div>
+            </div>
+
+            <!-- Mood Tracker Section -->
+            <div id="mood" class="section">
+                <h2>😊 Mood Tracker</h2>
+                <p>Track your daily emotions and see patterns over time.</p>
+                
+                <div class="mood-calendar" id="moodCalendar">
+                    <!-- Calendar will be generated here -->
+                </div>
+
+                <div class="stats-grid" style="margin-top: 30px;">
+                    <div class="stat-card">
+                        <div class="stat-number" id="avgMood">7.2</div>
+                        <div class="stat-label">Average Mood</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="bestDay">Mon</div>
+                        <div class="stat-label">Best Day</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="moodStreak">12</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goals Section -->
+            <div id="goals" class="section">
+                <div class="journal-header">
+                    <h2>🎯 My Goals</h2>
+                    <button class="btn btn-primary" onclick="addGoal()">➕ Add Goal</button>
+                </div>
+
+                <div id="goalsList" class="goals-grid">
+                    <!-- Goals will be populated here -->
+                </div>
+            </div>
+
+            <!-- Habits Section -->
+            <div id="habits" class="section">
+                <div class="journal-header">
+                    <h2>⚡ Daily Habits</h2>
+                    <button class="btn btn-primary" onclick="addHabit()">➕ Add Habit</button>
+                </div>
+
+                <div id="habitsList" class="habits-grid">
+                    <!-- Habits will be populated here -->
+                </div>
+            </div>
+
+            <!-- Gratitude Section -->
+            <div id="gratitude" class="section">
+                <h2>🙏 Gratitude Journal</h2>
+                
+                <div class="gratitude-form">
+                    <h3>What are you grateful for today?</h3>
+                    <div class="form-group">
+                        <input type="text" class="form-input" id="gratitudeInput" placeholder="I'm grateful for...">
+                        <button class="btn btn-primary" onclick="addGratitude()" style="margin-top: 10px;">✨ Add</button>
+                    </div>
+                </div>
+
+                <div id="gratitudeList" class="gratitude-list">
+                    <!-- Gratitude items will be populated here -->
+                </div>
+            </div>
+
+            <!-- Quotes Section -->
+            <div id="quotes" class="section">
+                <h2>💫 Daily Inspiration</h2>
+                
+                <div class="quote-display" id="quoteDisplay">
+                    <div class="quote-text">"The only way to do great work is to love what you do."</div>
+                    <div class="quote-author">- Steve Jobs</div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="btn btn-primary" onclick="getNewQuote()">🔄 New Quote</button>
+                    <button class="btn btn-secondary" onclick="saveQuote()">💾 Save Quote</button>
+                </div>
+
+                <div id="savedQuotes" style="margin-top: 30px;">
+                    <h3>Saved Quotes</h3>
+                    <div id="savedQuotesList">
+                        <!-- Saved quotes will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics" class="section">
+                <h2>📊 Your Journey Analytics</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalEntries">0</div>
+                        <div class="stat-label">Journal Entries</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalGoals">0</div>
+                        <div class="stat-label">Goals Set</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="completedGoals">0</div>
+                        <div class="stat-label">Goals Achieved</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="habitStreak">0</div>
+                        <div class="stat-label">Longest Streak</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="gratitudeCount">0</div>
+                        <div class="stat-label">Gratitude Items</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="daysActive">0</div>
+                        <div class="stat-label">Days Active</div>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 15px; margin-top: 20px;">
+                    <h3>Weekly Mood Trend</h3>
+                    <div id="moodChart" style="height: 200px; display: flex; align-items: end; gap: 10px; justify-content: space-around;">
+                        <!-- Mood chart will be generated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings" class="section">
+                <h2>⚙️ Settings</h2>
+                
+                <div class="export-section">
+                    <h3>Data Management</h3>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
+                        <button class="btn btn-primary" onclick="exportAllData()">📤 Export All Data</button>
+                        <label for="importFile" class="file-label">📥 Import Data</label>
+                        <input type="file" id="importFile" class="file-input" accept=".json" onchange="importData(event)">
+                        <button class="btn btn-secondary" onclick="clearAllData()">🗑️ Clear All Data</button>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 15px; margin-top: 20px;">
+                    <h3>Notifications</h3>
+                    <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 15px;">
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="dailyReminder"> Daily journal reminder
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="habitReminder"> Habit tracking reminder
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="gratitudeReminder"> Gratitude reminder
+                        </label>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 15px; margin-top: 20px;">
+                    <h3>About Pause</h3>
+                    <p>Version 1.0.0</p>
+                    <p>Created with ❤️ by Maryam Mehboob Baloch</p>
+                    <p>Your digital sanctuary for mindful living and personal growth.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global app state
+        let appData = {
+            entries: [],
+            goals: [],
+            habits: [],
+            gratitude: [],
+            savedQuotes: [],
+            moods: {},
+            settings: {
+                theme: 'light',
+                notifications: {
+                    daily: false,
+                    habits: false,
+                    gratitude: false
+                }
+            }
+        };
+
+        // Load data from localStorage on app start
+        function loadAppData() {
+            const saved = localStorage.getItem('pauseAppData');
+            if (saved) {
+                appData = { ...appData, ...JSON.parse(saved) };
+            }
+            updateAllDisplays();
+        }
+
+        // Save data to localStorage
+        function saveAppData() {
+            localStorage.setItem('pauseAppData', JSON.stringify(appData));
+        }
+
+        // Navigation
+        function showSection(sectionId) {
+            // Remove active class from all nav cards and sections
+            document.querySelectorAll('.nav-card').forEach(card => card.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            
+            // Add active class to clicked nav card and corresponding section
+            event.target.closest('.nav-card').classList.add('active');
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update displays based on section
+            if (sectionId === 'mood') generateMoodCalendar();
+            if (sectionId === 'analytics') updateAnalytics();
+        }
+
+        // Journal functionality
+        let selectedMood = '';
+        let editingEntryId = null;
+
+        function showEntryForm() {
+            document.getElementById('entryForm').style.display = 'block';
+            document.getElementById('entryContent').focus();
+        }
+
+        function cancelEntry() {
+            document.getElementById('entryForm').style.display = 'none';
+            document.getElementById('entryTitle').value = '';
+            document.getElementById('entryContent').value = '';
+            selectedMood = '';
+            editingEntryId = null;
+            document.querySelectorAll('.mood-option').forEach(opt => opt.classList.remove('selected'));
+        }
+
+        function saveEntry() {
+            const title = document.getElementById('entryTitle').value;
+            const content = document.getElementById('entryContent').value;
+            
+            if (!content.trim()) {
+                alert('Please write something in your entry!');
+                return;
+            }
+
+            const entry = {
+                id: editingEntryId || Date.now(),
+                title: title || 'Untitled Entry',
+                content: content,
+                mood: selectedMood || '😐',
+                date: new Date().toISOString(),
+                dateString: new Date().toLocaleDateString()
+            };
+
+            if (editingEntryId) {
+                const index = appData.entries.findIndex(e => e.id === editingEntryId);
+                appData.entries[index] = entry;
+            } else {
+                appData.entries.unshift(entry);
+            }
+
+            saveAppData();
+            displayEntries();
+            cancelEntry();
+        }
+
+        function displayEntries() {
+            const container = document.getElementById('entriesList');
+            if (appData.entries.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px;">No entries yet. Start writing your first entry! ✨</p>';
+                return;
+            }
+
+            container.innerHTML = appData.entries.map(entry => `
+                <div class="entry-card">
+                    <div class="entry-header">
+                        <div class="entry-date">${entry.dateString}</div>
+                        <div class="entry-mood">${entry.mood}</div>
+                    </div>
+                    <h3 style="margin-bottom: 10px; color: #374151;">${entry.title}</h3>
+                    <div class="entry-content">${entry.content.substring(0, 200)}${entry.content.length > 200 ? '...' : ''}</div>
+                    <div class="entry-actions">
+                        <button class="btn btn-secondary btn-small" onclick="editEntry(${entry.id})">✏️ Edit</button>
+                        <button class="btn btn-secondary btn-small" onclick="deleteEntry(${entry.id})">🗑️ Delete</button>
+                        <button class="btn btn-secondary btn-small" onclick="viewFullEntry(${entry.id})">👁️ View Full</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editEntry(id) {
+            const entry = appData.entries.find(e => e.id === id);
+            if (!entry) return;
+
+            editingEntryId = id;
+            document.getElementById('entryTitle').value = entry.title;
+            document.getElementById('entryContent').value = entry.content;
+            selectedMood = entry.mood;
+            
+            document.querySelectorAll('.mood-option').forEach(opt => {
+                opt.classList.remove('selected');
+                if (opt.dataset.mood === entry.mood) {
+                    opt.classList.add('selected');
+                }
+            });
+
+            showEntryForm();
+        }
+
+        function deleteEntry(id) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                appData.entries = appData.entries.filter(e => e.id !== id);
+                saveAppData();
+                displayEntries();
+            }
+        }
+
+        function viewFullEntry(id) {
+            const entry = appData.entries.find(e => e.id === id);
+            if (!entry) return;
+
+            alert(`${entry.title}\n\n${entry.content}\n\nMood: ${entry.mood}\nDate: ${entry.dateString}`);
+        }
+
+        // Mood selection
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('mood-option')) {
+                document.querySelectorAll('.mood-option').forEach(opt => opt.classList.remove('selected'));
+                e.target.classList.add('selected');
+                selectedMood = e.target.dataset.mood;
+            }
+        });
+
+        // Goals functionality
+        function addGoal() {
+            const title = prompt('What goal would you like to set?');
+            if (!title) return;
+
+            const goal = {
+                id: Date.now(),
+                title: title,
+                progress: 0,
+                target: 100,
+                created: new Date().toISOString(),
+                completed: false
+            };
+
+            appData.goals.push(goal);
+            saveAppData();
+            displayGoals();
+        }
+
+        function displayGoals() {
+            const container = document.getElementById('goalsList');
+            if (appData.goals.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px;">No goals set yet. Add your first goal! 🎯</p>';
+                return;
+            }
+
+            container.innerHTML = appData.goals.map(goal => `
+                <div class="goal-card">
+                    <h3 style="margin-bottom: 15px; color: #374151;">${goal.title}</h3>
+                    <div class="goal-progress">
+                        <div class="goal-progress-bar" style="width: ${goal.progress}%"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <span>${goal.progress}% Complete</span>
+                        <div>
+                            <button class="btn btn-secondary btn-small" onclick="updateGoalProgress(${goal.id})">📈 Update</button>
+                            <button class="btn btn-secondary btn-small" onclick="deleteGoal(${goal.id})">🗑️ Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateGoalProgress(id) {
+            const goal = appData.goals.find(g => g.id === id);
+            if (!goal) return;
+
+            const newProgress = prompt(`Current progress: ${goal.progress}%\nEnter new progress (0-100):`);
+            if (newProgress === null) return;
+
+            const progress = Math.max(0, Math.min(100, parseInt(newProgress) || 0));
+            goal.progress = progress;
+            goal.completed = progress === 100;
+
+            saveAppData();
+            displayGoals();
+        }
+
+        function deleteGoal(id) {
+            if (confirm('Are you sure you want to delete this goal?')) {
+                appData.goals = appData.goals.filter(g => g.id !== id);
+                saveAppData();
+                displayGoals();
+            }
+        }
+
+        // Habits functionality
+        function addHabit() {
+            const name = prompt('What habit would you like to track?');
+            if (!name) return;
+
+            const habit = {
+                id: Date.now(),
+                name: name,
+                completedDays: [],
+                created: new Date().toISOString()
+            };
+
+            appData.habits.push(habit);
+            saveAppData();
+            displayHabits();
+        }
+
+        function displayHabits() {
+            const container = document.getElementById('habitsList');
+            if (appData.habits.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px;">No habits tracked yet. Add your first habit! ⚡</p>';
+                return;
+            }
+
+            const today = new Date();
+            const last7Days = Array.from({length: 7}, (_, i) => {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                return date.toDateString();
+            }).reverse();
+
+            container.innerHTML = appData.habits.map(habit => `
+                <div class="habit-row">
+                    <div>
+                        <h4 style="margin: 0; color: #374151;">${habit.name}</h4>
+                        <small style="color: #6b7280;">Streak: ${calculateStreak(habit)} days</small>
+                    </div>
+                    <div class="habit-days">
+                        ${last7Days.map(date => `
+                            <div class="habit-day ${habit.completedDays.includes(date) ? 'completed' : ''}" 
+                                 onclick="toggleHabitDay(${habit.id}, '${date}')">
+                                ${new Date(date).getDate()}
+                            </div>
+                        `).join('')}
+                        <button class="btn btn-secondary btn-small" onclick="deleteHabit(${habit.id})" style="margin-left: 10px;">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleHabitDay(habitId, date) {
+            const habit = appData.habits.find(h => h.id === habitId);
+            if (!habit) return;
+
+            const index = habit.completedDays.indexOf(date);
+            if (index > -1) {
+                habit.completedDays.splice(index, 1);
+            } else {
+                habit.completedDays.push(date);
+            }
+
+            saveAppData();
+            displayHabits();
+        }
+
+        function calculateStreak(habit) {
+            const today = new Date();
+            let streak = 0;
+            
+            for (let i = 0; i < 365; i++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateString = date.toDateString();
+                
+                if (habit.completedDays.includes(dateString)) {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+            
+            return streak;
+        }
+
+        function deleteHabit(id) {
+            if (confirm('Are you sure you want to delete this habit?')) {
+                appData.habits = appData.habits.filter(h => h.id !== id);
+                saveAppData();
+                displayHabits();
+            }
+        }
+
+        // Gratitude functionality
+        function addGratitude() {
+            const input = document.getElementById('gratitudeInput');
+            const text = input.value.trim();
+            
+            if (!text) return;
+
+            const gratitudeItem = {
+                id: Date.now(),
+                text: text,
+                date: new Date().toLocaleDateString()
+            };
+
+            appData.gratitude.unshift(gratitudeItem);
+            input.value = '';
+            saveAppData();
+            displayGratitude();
+        }
+
+        function displayGratitude() {
+            const container = document.getElementById('gratitudeList');
+            if (appData.gratitude.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px;">No gratitude entries yet. What are you thankful for? 🙏</p>';
+                return;
+            }
+
+            container.innerHTML = appData.gratitude.map(item => `
+                <div class="gratitude-item">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 5px;">${item.text}</div>
+                            <small style="color: #6b7280;">${item.date}</small>
+                        </div>
+                        <button class="btn btn-secondary btn-small" onclick="deleteGratitude(${item.id})">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteGratitude(id) {
+            appData.gratitude = appData.gratitude.filter(g => g.id !== id);
+            saveAppData();
+            displayGratitude();
+        }
+
+        // Quotes functionality
+        const inspirationalQuotes = [
+            { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+            { text: "Life is what happens to you while you're busy making other plans.", author: "John Lennon" },
+            { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+            { text: "It is during our darkest moments that we must focus to see the light.", author: "Aristotle" },
+            { text: "The only impossible journey is the one you never begin.", author: "Tony Robbins" },
+            { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
+            { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+            { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+            { text: "Don't let yesterday take up too much of today.", author: "Will Rogers" },
+            { text: "You learn more from failure than from success.", author: "Unknown" }
+        ];
+
+        let currentQuoteIndex = 0;
+
+        function getNewQuote() {
+            currentQuoteIndex = Math.floor(Math.random() * inspirationalQuotes.length);
+            const quote = inspirationalQuotes[currentQuoteIndex];
+            
+            document.querySelector('.quote-text').textContent = `"${quote.text}"`;
+            document.querySelector('.quote-author').textContent = `- ${quote.author}`;
+        }
+
+        function saveQuote() {
+            const quote = inspirationalQuotes[currentQuoteIndex];
+            const savedQuote = {
+                id: Date.now(),
+                text: quote.text,
+                author: quote.author,
+                savedDate: new Date().toLocaleDateString()
+            };
+
+            appData.savedQuotes.push(savedQuote);
+            saveAppData();
+            displaySavedQuotes();
+        }
+
+        function displaySavedQuotes() {
+            const container = document.getElementById('savedQuotesList');
+            if (appData.savedQuotes.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 20px;">No saved quotes yet.</p>';
+                return;
+            }
+
+            container.innerHTML = appData.savedQuotes.map(quote => `
+                <div style="background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #6366f1;">
+                    <div style="font-style: italic; margin-bottom: 5px;">"${quote.text}"</div>
+                    <div style="font-weight: 600; color: #6366f1; font-size: 0.9rem;">- ${quote.author}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                        <small style="color: #6b7280;">Saved on ${quote.savedDate}</small>
+                        <button class="btn btn-secondary btn-small" onclick="deleteSavedQuote(${quote.id})">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteSavedQuote(id) {
+            appData.savedQuotes = appData.savedQuotes.filter(q => q.id !== id);
+            saveAppData();
+            displaySavedQuotes();
+        }
+
+        // Analytics functionality
+        function updateAnalytics() {
+            document.getElementById('totalEntries').textContent = appData.entries.length;
+            document.getElementById('totalGoals').textContent = appData.goals.length;
+            document.getElementById('completedGoals').textContent = appData.goals.filter(g => g.completed).length;
+            document.getElementById('gratitudeCount').textContent = appData.gratitude.length;
+            
+            // Calculate longest habit streak
+            let longestStreak = 0;
+            appData.habits.forEach(habit => {
+                const streak = calculateStreak(habit);
+                if (streak > longestStreak) longestStreak = streak;
+            });
+            document.getElementById('habitStreak').textContent = longestStreak;
+
+            // Calculate days active (days with any activity)
+            const activeDays = new Set();
+            appData.entries.forEach(entry => activeDays.add(entry.dateString));
+            appData.gratitude.forEach(item => activeDays.add(item.date));
+            document.getElementById('daysActive').textContent = activeDays.size;
+
+            generateMoodChart();
+        }
+
+        function generateMoodChart() {
+            const container = document.getElementById('moodChart');
+            const last7Days = Array.from({length: 7}, (_, i) => {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                return date.toLocaleDateString();
+            }).reverse();
+
+            const moodValues = { '😢': 1, '😐': 2, '😊': 3, '😍': 4, '🤔': 2.5 };
+            
+            container.innerHTML = last7Days.map(date => {
+                const dayEntries = appData.entries.filter(e => e.dateString === date);
+                const avgMood = dayEntries.length > 0 
+                    ? dayEntries.reduce((sum, e) => sum + (moodValues[e.mood] || 2), 0) / dayEntries.length
+                    : 0;
+                
+                const height = avgMood * 40;
+                const dayName = new Date(date).toLocaleDateString('en', { weekday: 'short' });
+                
+                return `
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <div style="width: 30px; background: linear-gradient(135deg, #667eea, #764ba2); height: ${height}px; border-radius: 4px; margin-bottom: 5px;"></div>
+                        <small>${dayName}</small>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Mood calendar functionality
+        function generateMoodCalendar() {
+            const container = document.getElementById('moodCalendar');
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            container.innerHTML = '';
+            
+            // Add day headers
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.textContent = day;
+                header.style.fontWeight = '600';
+                header.style.textAlign = 'center';
+                header.style.padding = '10px';
+                header.style.color = '#6b7280';
+                container.appendChild(header);
+            });
+
+            // Add empty cells for days before month starts
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                container.appendChild(emptyDay);
+            }
+
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(currentYear, currentMonth, day);
+                const dateString = date.toLocaleDateString();
+                const dayElement = document.createElement('div');
+                
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                
+                // Check if there are entries for this day
+                const dayEntries = appData.entries.filter(e => e.dateString === dateString);
+                if (dayEntries.length > 0) {
+                    dayElement.classList.add('has-mood');
+                    const avgMood = dayEntries[0].mood; // Use first entry's mood for simplicity
+                    dayElement.style.background = getMoodColor(avgMood);
+                    dayElement.style.color = 'white';
+                }
+                
+                dayElement.onclick = () => showDayDetails(dateString);
+                container.appendChild(dayElement);
+            }
+        }
+
+        function getMoodColor(mood) {
+            const colors = {
+                '😢': '#ef4444',
+                '😐': '#6b7280',
+                '😊': '#10b981',
+                '😍': '#f59e0b',
+                '🤔': '#8b5cf6'
+            };
+            return colors[mood] || '#6b7280';
+        }
+
+        function showDayDetails(dateString) {
+            const dayEntries = appData.entries.filter(e => e.dateString === dateString);
+            if (dayEntries.length === 0) {
+                alert(`No entries for ${dateString}`);
+                return;
+            }
+            
+            const details = dayEntries.map(e => `${e.mood} ${e.title}: ${e.content.substring(0, 100)}...`).join('\n\n');
+            alert(`Entries for ${dateString}:\n\n${details}`);
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.classList.contains('dark-theme');
+            
+            if (isDark) {
+                body.classList.remove('dark-theme');
+                appData.settings.theme = 'light';
+                document.querySelector('.theme-toggle').textContent = '🌙';
+            } else {
+                body.classList.add('dark-theme');
+                appData.settings.theme = 'dark';
+                document.querySelector('.theme-toggle').textContent = '☀️';
+            }
+            
+            saveAppData();
+        }
+
+        // Export/Import functionality
+        function exportAllData() {
+            const dataStr = JSON.stringify(appData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `pause-backup-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if (confirm('This will replace all your current data. Are you sure?')) {
+                        appData = { ...appData, ...importedData };
+                        saveAppData();
+                        updateAllDisplays();
+                        alert('Data imported successfully!');
+                    }
+                } catch (error) {
+                    alert('Error importing data. Please check the file format.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function clearAllData() {
+            if (confirm('This will delete ALL your data permanently. Are you sure?')) {
+                if (confirm('This action cannot be undone. Really delete everything?')) {
+                    localStorage.removeItem('pauseAppData');
+                    appData = {
+                        entries: [],
+                        goals: [],
+                        habits: [],
+                        gratitude: [],
+                        savedQuotes: [],
+                        moods: {},
+                        settings: { theme: 'light', notifications: { daily: false, habits: false, gratitude: false } }
+                    };
+                    updateAllDisplays();
+                    alert('All data cleared.');
+                }
+            }
+        }
+
+        // Search functionality
+        function searchEntries() {
+            const query = prompt('Search your entries:');
+            if (!query) return;
+            
+            const results = appData.entries.filter(entry => 
+                entry.title.toLowerCase().includes(query.toLowerCase()) ||
+                entry.content.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            if (results.length === 0) {
+                alert('No entries found matching your search.');
+                return;
+            }
+            
+            const container = document.getElementById('entriesList');
+            container.innerHTML = results.map(entry => `
+                <div class="entry-card">
+                    <div class="entry-header">
+                        <div class="entry-date">${entry.dateString}</div>
+                        <div class="entry-mood">${entry.mood}</div>
+                    </div>
+                    <h3 style="margin-bottom: 10px; color: #374151;">${entry.title}</h3>
+                    <div class="entry-content">${entry.content.substring(0, 200)}${entry.content.length > 200 ? '...' : ''}</div>
+                    <div class="entry-actions">
+                        <button class="btn btn-secondary btn-small" onclick="editEntry(${entry.id})">✏️ Edit</button>
+                        <button class="btn btn-secondary btn-small" onclick="deleteEntry(${entry.id})">🗑️ Delete</button>
+                        <button class="btn btn-secondary btn-small" onclick="viewFullEntry(${entry.id})">👁️ View Full</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Add button to show all entries again
+            container.innerHTML += '<div style="text-align: center; margin-top: 20px;"><button class="btn btn-secondary" onclick="displayEntries()">Show All Entries</button></div>';
+        }
+
+        function exportEntries() {
+            if (appData.entries.length === 0) {
+                alert('No entries to export!');
+                return;
+            }
+            
+            const entriesText = appData.entries.map(entry => 
+                `${entry.dateString} - ${entry.title}\n${entry.content}\nMood: ${entry.mood}\n\n---\n\n`
+            ).join('');
+            
+            const blob = new Blob([entriesText], {type: 'text/plain'});
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `journal-entries-${new Date().toISOString().split('T')[0]}.txt`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+        }
+
+        // Update all displays
+        function updateAllDisplays() {
+            displayEntries();
+            displayGoals();
+            displayHabits();
+            displayGratitude();
+            displaySavedQuotes();
+            updateAnalytics();
+            
+            // Apply saved theme
+            if (appData.settings.theme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.querySelector('.theme-toggle').textContent = '☀️';
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'n':
+                        e.preventDefault();
+                        showSection('journal');
+                        showEntryForm();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        if (document.getElementById('entryForm').style.display !== 'none') {
+                            saveEntry();
+                        }
+                        break;
+                    case 'e':
+                        e.preventDefault();
+                        exportAllData();
+                        break;
+                }
+            }
+        });
+
+        // Add gratitude on Enter key
+        document.getElementById('gratitudeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addGratitude();
+            }
+        });
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAppData();
+            getNewQuote();
+            
+            // Show welcome message for new users
+            if (appData.entries.length === 0 && appData.goals.length === 0) {
+                setTimeout(() => {
+                    alert('Welcome to Pause! ✨\n\nYour digital sanctuary for mindful living. Start by writing your first journal entry or setting a goal. All your data is saved locally and private to you.');
+                }, 1000);
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9894a6c2f5c79083',t:'MTc1OTU4MDYxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
